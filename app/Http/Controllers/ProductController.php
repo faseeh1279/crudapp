@@ -1,16 +1,16 @@
 <?php
 
-    namespace App\Http\Controllers;
-    use Illuminate\Http\Request;
-    use App\Models\Product;
-    use Illuminate\Support\Facades\DB;
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::paginate(10, ['*'], 'page', 1, 12); 
+        $products = Product::all();
         return view('products.index', ['products' => $products]);
     }
 
@@ -58,7 +58,7 @@ class ProductController extends Controller
 
     public function pagination($pageNumber, $perPage = 10)
     { 
-        $products = DB::table('products')->paginate(perPage:25); 
+        $products = DB::table('products')->paginate(perPage:$perPage, page:$pageNumber); 
         return view('products.index', ['products' => $products]);
     }
 }
