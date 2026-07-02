@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('qty'); 
             $table->decimal('price', 8, 2);
             $table->text('description'); 
+            $table->string('address')->nullable(); 
             $table->timestamps();
         });
     }

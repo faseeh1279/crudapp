@@ -18,26 +18,35 @@ class CategoryController extends Controller
     //     return view('categories.index', compact('categories'));
     // }
 
-    public function index()
+    public function index(Request $request)
     {
-        $page = request()->get('page', 1);
-        $perPage = request()->get('per_page', 10);
-
-        $offset = ($page - 1) * $perPage;
-
-        $categories = DB::table('categories')
-            ->offset($offset)
-            ->limit($perPage)
-            ->get();
-
-        $total = DB::table('categories')->count();
-        $totalPages = ceil($total / $perPage);
-
-        return view('categories.index', compact(
-            'categories',
-            'page',
-            'totalPages'
-        ));
+        $search = $request->input('search'); 
+        $page = 1; 
+        $totalPages = 1; 
+        if($search != ""){ 
+            $categories = Category::where('name', 'LIKE', $search. "%", null)->get();
+            return view('categories.index', compact('categories', 'page', 'totalPages')); 
+        }
+        else { 
+            $page = request()->get('page', 1);
+            $perPage = request()->get('per_page', 10);
+    
+            $offset = ($page - 1) * $perPage;
+    
+            $categories = DB::table('categories')
+                ->offset($offset)
+                ->limit($perPage)
+                ->get();
+    
+            $total = DB::table('categories')->count();
+            $totalPages = ceil($total / $perPage);
+    
+            return view('categories.index', compact(
+                'categories',
+                'page',
+                'totalPages'
+            ));
+        }
     }
 
     public function create()
@@ -80,4 +89,20 @@ class CategoryController extends Controller
         return redirect(route('categories.index'))->with('success', 'Category deleted successfully.');
     }
 
+    // public function search(Request $request)
+    // {
+    //     $search = $request->search;
+
+    //     $categories = Category::when($search, function ($query, $search) {
+    //         $query->where('name', 'like', "%{$search}%");
+    //     }, null)->get();
+
+    //     // return view('categories.index', compact('categories'));
+    //     return redirect()->route('categories.index', ['search' => $search])->with('categories', $categories);
+    // }
+
+//     <form action="{{ route('categories.index') }}" method="GET">
+//     <input type="text" name="search">
+//     <button type="submit">Search</button>
+// </form>
 }

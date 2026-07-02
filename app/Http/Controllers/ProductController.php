@@ -61,4 +61,8 @@ class ProductController extends Controller
         $products = DB::table('products')->paginate(perPage:$perPage, page:$pageNumber); 
         return view('products.index', ['products' => $products]);
     }
+
+    public function viewProductsDetail(){ 
+        return view('products.viewDetail'); 
+    }
 }
